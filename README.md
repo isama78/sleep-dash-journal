@@ -4,10 +4,12 @@ A web application for tracking and improving sleep habits.
 
 ## Team Members
 
-- Dany Josue Jimenez Gonzalez
-- John Smith
-- Jane Doe
-- Maria Garcia
+- Aurora Isabelle Norlund
+- Carson Landvatter
+- Dany Jimenez
+- Mauro Jose Isa
+
+
 
 ## Technologies
 
@@ -15,4 +17,3 @@ A web application for tracking and improving sleep habits.
 - TypeScript
 - Tailwind CSS
 - PostgreSQL
-- Prisma
