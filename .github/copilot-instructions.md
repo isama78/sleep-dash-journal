@@ -78,11 +78,58 @@ Prefer implementing/maintaining these endpoints:
 
 ## UI/UX Behavior Rules
 
-- Journal list should be sorted by date (most recent first unless current codebase uses another explicit convention).
-- Provide an explicit empty state when no entries exist.
+### Date/Time Formatting
+- **Display dates**: `DD/MM/YYYY` (e.g., "22/07/2026")
+- **Display times**: 24-hour format (e.g., "22:30", "08:15")
+- **Duration display**: "Xh Ym" format (e.g., "7h 30m", "5h 45m")
+
+### Entry Management (Issues #2, #3, #5)
+- Journal list should be sorted by date (most recent first).
+- Provide an explicit empty state when no entries exist ("No sleep entries yet. Create your first entry!").
 - Show clear success/error states for create/update/delete actions.
+- **Edit behavior**: Show modal with prefilled form. On save, show loading state. On success, close modal and refresh list.
+- **Delete behavior**: Show confirmation dialog with entry details. On confirm, show loading state. On success, remove entry from list.
 - Prevent form submission when required fields are missing.
+- **Form validation**: Show field-level error messages inline (below field, red text).
+- **Success feedback**: Toast notification (top-right) after successful create/update/delete.
+- **Error feedback**: Toast notification with actionable message if operation fails.
 - Preserve accessibility basics (labels, keyboard interaction, focus visibility, semantic elements).
+- Handle network failures gracefully: show retry button and helpful message.
+
+## Component Architecture
+
+### Essential Components
+Build these components to satisfy issues #2, #3, #5:
+
+- **JournalEntryCard** (Issue #2)
+  - Display single entry summary: date, duration, mood/quality badge
+  - Show truncated notes (tooltip on hover for full text)
+  - Include quick-action buttons: edit, delete
+  - Visual feedback: hover state, loading state while deleting
+  - Responsive: stack controls on mobile
+
+- **JournalManagementView** (Issue #3)
+  - Container for entry management functionality
+  - Displays list of all user entries sorted by date (newest first)
+  - Empty state when no entries exist
+  - Integrate with JournalEntryCard for each entry
+
+- **EntryEditModal/Dialog** (Issue #5)
+  - Modal form for editing existing entries
+  - Prefilled with current entry data
+  - Reuse EntryForm component logic when possible
+  - Submit and cancel buttons
+  - Show loading state during submission
+
+- **DeleteConfirmationDialog** (Issue #5)
+  - Modal asking "Are you sure?" before deletion
+  - Explain what will be deleted (date/duration)
+  - Cancel and Confirm buttons
+  - Show loading state during deletion
+
+### Existing Components (Reuse/Refactor)
+- `EntryForm.tsx` - Used for both create and edit flows (check isEditing mode)
+- `EntryList.tsx` - Refactor to use JournalEntryCard internally
 
 ## Naming and Code Conventions
 
@@ -148,6 +195,19 @@ When generating code, Copilot should:
 3. Reuse existing utilities and patterns before adding new abstractions.
 4. Include tests for any behavior change in core flows.
 5. Keep responses and code aligned with `spec.md` priorities and FR IDs where applicable.
+
+## Definition of Done (for generated tasks)
+
+A task is considered done when:
+
+- It satisfies the relevant FR(s) from `spec.md`.
+- It includes validation and user feedback behavior.
+- It enforces authentication and ownership constraints.
+- It includes/updates automated tests for critical paths.
+- It does not break existing App Router/TypeScript/Tailwind conventions.
+
+---
+If instructions here conflict with explicit maintainer guidance in an issue/PR comment, follow maintainer guidance and update this file afterward to reflect the new standard.
 
 ## Definition of Done (for generated tasks)
 
