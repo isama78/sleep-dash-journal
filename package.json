@@ -1,7 +1,9 @@
 {
+  "name": "tu-proyecto",
+  "version": "1.0.0",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
     "prisma:generate": "prisma generate",
@@ -29,8 +31,6 @@
     "eslint-config-prettier": "^10.1.8",
     "jsdom": "^29.1.1",
     "prettier": "^3.9.4",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^4.1.10"
