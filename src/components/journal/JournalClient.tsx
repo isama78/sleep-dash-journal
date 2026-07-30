@@ -1,10 +1,10 @@
+
 'use client';
 
 import { useState } from 'react';
 import EntryForm from './EntryForm';
 import EntryList from './EntryList';
 import { useToast, ToastContainer } from './Toast';
-
 
 type Entry = {
   id: number;
@@ -16,21 +16,49 @@ type Entry = {
   updatedAt: string;
 };
 
-
 type Props = {
-  initialEntries: Entry[];
+  initialEntries: unknown[];
 };
+
+
+function mapEntry(entry: unknown): Entry {
+
+  const item = entry as {
+    entry_id?: number;
+    id?: number;
+    date?: string;
+    sleep_time?: string;
+    bedtime?: string;
+    wake_time?: string;
+    wakeTime?: string;
+    sleep_quality?: number | null;
+    mood?: number | null;
+    notes?: string | null;
+    updated_at?: string;
+    updatedAt?: string;
+  };
+
+  return {
+    id: item.entry_id ?? item.id ?? 0,
+    date: item.date ?? '',
+    bedtime: item.sleep_time ?? item.bedtime ?? '',
+    wakeTime: item.wake_time ?? item.wakeTime ?? '',
+    mood: item.sleep_quality ?? item.mood ?? null,
+    notes: item.notes ?? null,
+    updatedAt: item.updated_at ?? item.updatedAt ?? '',
+  };
+}
 
 
 export default function JournalClient({
   initialEntries,
 }: Props) {
 
-  const [entries, setEntries] = useState<Entry[]>(initialEntries);
+  const [entries, setEntries] = useState<Entry[]>(
+    initialEntries.map(mapEntry)
+  );
 
   const [editing, setEditing] = useState<Entry | null>(null);
-
-  const [message, setMessage] = useState('');
 
   const {
     toasts,
@@ -39,21 +67,21 @@ export default function JournalClient({
   } = useToast();
 
 
-
   async function refresh() {
 
     try {
 
-      const res = await fetch('/api/sleep-entries');
+      const res = await fetch('/api/journal');
 
       if (!res.ok) {
         throw new Error('Failed to load entries');
       }
 
-
       const data = await res.json();
 
-      setEntries(data);
+      setEntries(
+        data.map(mapEntry)
+      );
 
 
     } catch (error) {
@@ -67,11 +95,7 @@ export default function JournalClient({
   }
 
 
-
   const handleSetMessage = (msg: string) => {
-
-    setMessage(msg);
-
 
     if (msg) {
 
@@ -83,7 +107,6 @@ export default function JournalClient({
     }
 
   };
-
 
 
   return (

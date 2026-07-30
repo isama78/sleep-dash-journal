@@ -126,21 +126,15 @@ export default function EntryForm({
     setErrors({});
 
 
-    const payload = {
-
-      date,
-
-      bedtime: convertTo12Hour(bedtime),
-
-      wake_time: convertTo12Hour(wakeTime),
-
-      sleep_quality: mood
-        ? Number(mood)
-        : null,
-
-      notes,
-
-    };
+  const payload = {
+  date,
+  bedtime: convertTo12Hour(bedtime),
+  wake_time: convertTo12Hour(wakeTime),
+  sleep_quality: mood
+    ? Number(mood)
+    : null,
+  notes,
+};
 
 
 
@@ -151,15 +145,15 @@ export default function EntryForm({
 
       const url = isEditing
 
-        ? `/api/sleep-entries/${editing.id}`
+        ? `/api/journal/${editing.id}`
 
-        : '/api/sleep-entries';
+        : '/api/journal';
 
 
 
       const method = isEditing
-        ? 'PATCH'
-        : 'POST';
+      ? 'PUT'
+      : 'POST';
 
 
 
@@ -190,26 +184,14 @@ export default function EntryForm({
 
       if (!res.ok) {
 
-        if (data?.errors) {
+  setMessage(
+    data?.message ||
+    'Operation failed.'
+  );
 
-          setErrors(data.errors);
+  return;
 
-          setMessage(
-            'Please fix validation errors.'
-          );
-
-        } else {
-
-          setMessage(
-            data?.message ||
-            'Operation failed.'
-          );
-
-        }
-
-        return;
-
-      }
+}
 
 
 

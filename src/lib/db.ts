@@ -194,14 +194,14 @@ export async function updateEntry(
   try {
     const result = await client.query(
       `
-      UPDATE sleepjournal.entries
-      SET
-        bedtime = $1,
-        wake_time = $2,
-        mood = $3,
-        notes = $4
-      WHERE entry_id = $5
-      RETURNING *
+     UPDATE sleepjournal.entries
+SET
+    sleep_time = $1,
+    wake_time = $2,
+    sleep_quality = $3,
+    notes = $4
+WHERE entry_id = $5
+RETURNING *
       `,
       [
         entry.bedtime,
