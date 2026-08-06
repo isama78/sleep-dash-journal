@@ -1,23 +1,5 @@
+import { getEntries } from "@/lib/db";
 import EntryCard from "./components/EntryCard";
-import { SleepEntry } from "@/lib/types";
-
-async function getEntries(userId: number): Promise<SleepEntry[]> {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
-    const res = await fetch(`${baseUrl}/api/entries/${userId}`, {
-      cache: "no-store",
-    });
-
-    if (!res.ok) {
-      throw new Error("Failed to fetch entries");
-    }
-
-    return res.json();
-  } catch (error) {
-    console.error("Error loading entries:", error);
-    return [];
-  }
-}
 
 export default async function HomePage() {
   // userId is being hardcoded for now until we have a way to get it from the user
