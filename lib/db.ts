@@ -1,4 +1,5 @@
 import { Pool } from 'pg';
+import { auth } from '@/auth';
 
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
@@ -6,6 +7,12 @@ const pool = new Pool({
       rejectUnauthorized: false, 
     },
 });
+
+async function requireOwnerSession() {
+  const session = await auth();
+  if (!session?.user) throw new Error('Not authenticated');
+  return session;
+}
   
 export async function getEntries(user_id: number) {
   try {
@@ -23,6 +30,7 @@ export async function getEntries(user_id: number) {
 }
 
 export async function getEntryById(entry_id: number) {
+  await requireOwnerSession();
   try {
     const client = await pool.connect();
     const res = await client.query(
@@ -38,6 +46,7 @@ export async function getEntryById(entry_id: number) {
 }
 
 export async function getUserInfo(user_id: number) {
+  await requireOwnerSession();
   try {
     const client = await pool.connect();
     const res = await client.query(

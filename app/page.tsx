@@ -1,3 +1,4 @@
+import { getEntries } from "@/lib/db";
 import EntryCard from "./components/EntryCard";
 import { getEntries } from "@/lib/db";
 import { auth } from "@/auth";
