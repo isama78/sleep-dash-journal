@@ -1,9 +1,24 @@
 import { getEntries } from "@/lib/db";
 import EntryCard from "./components/EntryCard";
+import { getEntries } from "@/lib/db";
+import { auth } from "@/auth";
+import Link from "next/link";
+
 
 export default async function HomePage() {
   // userId is being hardcoded for now until we have a way to get it from the user
-  const userId = 1;
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return (
+      <main>
+        <h1>Sleep Dashboard</h1>
+        <p>Please log in to view your sleep entries.</p>
+      </main>
+    );
+  }
+  const userId = Number(session.user.id);
+
   const entries = await getEntries(userId);
 
   return (
@@ -17,9 +32,12 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <button className="self-start rounded-lg bg-accent px-4 py-2 font-semibold text-white shadow transition-hover hover:bg-accent/80 md:self-auto">
-            + New Entry
-          </button>
+          <Link
+  href="/journal"
+  className="self-start rounded-lg bg-accent px-4 py-2 font-semibold text-white shadow transition-hover hover:bg-accent/80 md:self-auto"
+>
+  + New Entry
+</Link>
         </header>
 
         {entries.length === 0 ? (
